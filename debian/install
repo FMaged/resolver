@@ -1,0 +1,3 @@
+src/resolver /usr/lib/python3/dist-packages/
+config/config.toml     /var/resolver/config/
+config/logger.json     /var/resolver/config/

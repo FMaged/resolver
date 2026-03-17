@@ -31,10 +31,11 @@ dependencies = [
 package-dir = { "" = "src" }
 packages = ["resolver"]  # List of packages to include
 
-[tool.setuptools.packages-data]
-resolver = ["*.toml", "*.json"]  # Include config files in the package
+[tool.setuptools.package-data]
+# Format: "package_name" = ["pattern1", "pattern2"]
+"resolver" = ["*.txt", "*.toml", "*.json", "config/*"]
 
 [project.scripts]
 # Creates executable command:
-# myapp → runs myapp.main:main()
-myapp = "resolver.main:main"
+# resolver → runs resolver.main:main()
+resolver = "resolver.main:main"
