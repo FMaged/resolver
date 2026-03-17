@@ -1,0 +1,40 @@
+[build-system]
+# Packages required to build your project
+requires = ["setuptools>=61.0", "wheel"]
+
+# Backend used to build the package
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "resolver"                
+version = "0.1.0"            # Version (required unless dynamic)
+description = "My Python application"
+readme = "README.md"         # Path to README file
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Your Name", email = "you@example.com" }
+]
+
+
+# Runtime dependencies (installed automatically)
+dependencies = [
+    "dnspython>=2.7.0",
+    "pydantic>=2.12.5",
+    "dynaconf>=3.2.12"
+]
+
+
+[tool.setuptools]
+# If using src/ layout
+package-dir = { "" = "src" }
+packages = ["resolver"]  # List of packages to include
+
+[tool.setuptools.packages-data]
+resolver = ["*.toml", "*.json"]  # Include config files in the package
+
+[project.scripts]
+# Creates executable command:
+# myapp → runs myapp.main:main()
+myapp = "resolver.main:main"

@@ -1,0 +1,29 @@
+# =====================================
+
+[network]
+
+bind_address=""
+
+dns_server = "0.0.0.0"
+
+port = 53
+
+# Transport protocols: "udp", "tcp", "both"
+protocols = ["udp", "tcp"]
+
+# Timeout for upstream queries (seconds)
+query_timeout = 5
+
+# Number of retries for failed upstream queries
+retries = 3
+
+# Maximum concurrent queries handled
+max_concurrent_queries = 1000
+
+# Bind socket options
+reuse_port = true
+
+# =====================================
+
+log_path="/path/"
+result_path=""

@@ -2,22 +2,10 @@
 
 import dns.resolver
 from dns.rdata import Rdata
-
-from enum import Enum
 from ipaddress import IPv4Address
 
-from records import HostName, MXRecord,ARecord
+from records import HostName, MXRecord,ARecord, EmailDNSRecord
 
-class EmailDNSRecord(str, Enum):
-    A="A"
-    AAAA="AAAA"
-    MX = "MX"
-    CNAME="CNAME"
-    NS="NS"
-    PTR="PTR"
-    TXT="TXT"
-    SOA="SOA"
-    SPF="SPF"
 
 
 def get_mail_servers(domain_name:str)->list[MXRecord]:

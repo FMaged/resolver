@@ -2,14 +2,25 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from ipaddress import IPv4Address, IPv6Address
 from typing import Annotated
+from enum import Enum
 
+class EmailDNSRecord(str, Enum):
+    ANY="ANY"
+    A="A"
+    AAAA="AAAA"
+    MX = "MX"
+    CNAME="CNAME"
+    NS="NS"
+    PTR="PTR"
+    TXT="TXT"
+    SOA="SOA"
+    SPF="SPF"
 
 class Parent(BaseModel):
     model_config = ConfigDict(
         extra='allow',
         str_to_lower=False,
         frozen=True,
-    
     )
 
 class HostName(Parent):
@@ -27,7 +38,7 @@ class ARecord(Parent):
 
 
 class AAAARecord(Parent):
-    ip: Annotated[list[IPv6Address], Field(min_length=1)]
+    ips: Annotated[list[IPv6Address], Field(min_length=1)]
 
 
 

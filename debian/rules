@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	python3 -m pip install . \
+		--root=$(CURDIR)/debian/resolver \
+		--no-compile \
+		--no-cache-dir
