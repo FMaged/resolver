@@ -1,41 +1,42 @@
 [build-system]
-# Packages required to build your project
 requires = ["setuptools>=61.0", "wheel"]
-
-# Backend used to build the package
 build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "resolver"                
-version = "0.1.0"            # Version (required unless dynamic)
-description = "My Python application"
-readme = "README.md"         # Path to README file
-requires-python = ">=3.10"
+name = "resolver"
+version = "0.1.0"
+description = "A dig-like CLI for looking up DNS records"
+requires-python = ">=3.11"  # tomllib
 
 authors = [
-    { name = "Your Name", email = "you@example.com" }
+    { name = "FMaged", email = "fadelmaged25@gmail.com" }
 ]
 
-
-# Runtime dependencies (installed automatically)
 dependencies = [
     "dnspython>=2.7.0",
-    "pydantic>=2.12.5",
-    "dynaconf>=3.2.12"
+    "pydantic>=2.9",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+xdig = "resolver.main:main"
 
 
 [tool.setuptools]
-# If using src/ layout
 package-dir = { "" = "src" }
-packages = ["resolver"]  # List of packages to include
+packages = ["resolver"]
 
-[tool.setuptools.package-data]
-# Format: "package_name" = ["pattern1", "pattern2"]
-"resolver" = ["*.txt", "*.toml", "*.json", "config/*"]
+[tool.ruff]
+line-length = 100
 
-[project.scripts]
-# Creates executable command:
-# resolver → runs resolver.main:main()
-resolver = "resolver.main:main"
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,3 +1,0 @@
-dnspython==2.7.0
-Pydantic==2.12.5
-dynaconf==3.2.12
