@@ -1,29 +1,8 @@
-# =====================================
+# Upstream DNS server to query. Commented out = use the system resolver.
+# dns_server = "1.1.1.1"
 
-[network]
-
-bind_address=""
-
-dns_server = "0.0.0.0"
-
-port = 53
-
-# Transport protocols: "udp", "tcp", "both"
-protocols = ["udp", "tcp"]
-
-# Timeout for upstream queries (seconds)
+# Seconds to wait for a reply.
 query_timeout = 5
 
-# Number of retries for failed upstream queries
+# Retry queries that fail with SERVFAIL (0 disables).
 retries = 3
-
-# Maximum concurrent queries handled
-max_concurrent_queries = 1000
-
-# Bind socket options
-reuse_port = true
-
-# =====================================
-
-log_path="/path/"
-result_path=""
