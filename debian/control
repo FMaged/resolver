@@ -18,7 +18,7 @@ Depends:
  ${misc:Depends},
  ${python3:Depends},
  python3-dnspython,
- python3-pydantic,
- python3-dynaconf
-Description: DNS resolver service
- A Python-based DNS resolver using dnspython, pydantic and dynaconf.
+ python3-pydantic
+Description: dig-like DNS lookup CLI
+ A dig-like command-line tool for looking up DNS records, built on dnspython
+ and pydantic.
