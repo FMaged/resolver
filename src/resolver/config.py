@@ -1,36 +1,42 @@
-from pathlib import Path
-from pydantic import Field
-
-from typing import Annotated, Literal
+import tomllib
 from ipaddress import IPv4Address
-from enum import Enum
+from pathlib import Path
+from typing import Annotated
 
-from records import Parent
+from pydantic import Field, ValidationError
 
+from .records import Base
 
-class Protocol(str, Enum):
-    UDP = "Udp"
-    TCP = "Tcp"
-
-
-
-class NetworkConfig(Parent):
-    bind_address:IPv4Address
-    dns_server: Annotated[IPv4Address, Field(alias="dns_ip")]
-    port:Annotated[int, Field(gt=0, le=65535)]
-    protocols: Protocol
-    query_timeout: Annotated[int, Field(gt=0, lt=30)] 
-    retries: Annotated[int, Field(gt=0, le=10)]
-    max_concurrent_queries: Annotated[int, Field(gt=0, le=1000)]
-    reuse_port: bool
-    recursion: bool
-
-    log_path: Path
-    result_path:Path
+# Location the .deb installs config.toml to
+SYSTEM_CONFIG_PATH = Path("/var/resolver/config/config.toml")
 
 
+class ConfigError(Exception):
+    pass
 
 
-def get_config(cfg_path:Path)->NetworkConfig:
-    pass    
+class ResolverConfig(Base):
+    dns_server: IPv4Address | None = None
+    query_timeout: Annotated[float, Field(gt=0, le=30)] = 5
+    retries: Annotated[int, Field(ge=0, le=10)] = 3
 
+
+def load_config(cfg_path: Path | None = None) -> ResolverConfig:
+    """Load config from cfg_path, else the system path, else built-in defaults."""
+    path = cfg_path or SYSTEM_CONFIG_PATH
+
+    if not path.is_file():
+        if cfg_path is not None:
+            raise ConfigError(f"config file not found: {path}")
+        return ResolverConfig()
+
+    try:
+        with path.open("rb") as f:
+            raw = tomllib.load(f)
+    except (OSError, tomllib.TOMLDecodeError) as e:
+        raise ConfigError(f"could not read config {path}: {e}") from e
+
+    try:
+        return ResolverConfig(**raw)
+    except ValidationError as e:
+        raise ConfigError(f"invalid config {path}: {e}") from e

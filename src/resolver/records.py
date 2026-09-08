@@ -1,8 +1,9 @@
-from pydantic import BaseModel, ConfigDict, Field, model_validator
-
+from enum import Enum
 from ipaddress import IPv4Address, IPv6Address
 from typing import Annotated
-from enum import Enum
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 
 class EmailDNSRecord(str, Enum):
     ANY="ANY"
@@ -16,14 +17,15 @@ class EmailDNSRecord(str, Enum):
     SOA="SOA"
     SPF="SPF"
 
-class Parent(BaseModel):
+class Base(BaseModel):
+    # forbid: an unknown key in config.toml should fail loudly, not be ignored
     model_config = ConfigDict(
-        extra='allow',
+        extra='forbid',
         str_to_lower=False,
         frozen=True,
     )
 
-class HostName(Parent):
+class HostName(Base):
     name:Annotated[
         str,
         Field(
@@ -33,27 +35,27 @@ class HostName(Parent):
         )
     ]
 
-class ARecord(Parent):
+class ARecord(Base):
     ips: Annotated[list[IPv4Address],Field(min_length=1)]
 
 
-class AAAARecord(Parent):
+class AAAARecord(Base):
     ips: Annotated[list[IPv6Address], Field(min_length=1)]
 
 
 
-class MXRecord(Parent):
+class MXRecord(Base):
     priority: Annotated[int, Field(ge=0,le=65535)]
     host: HostName
 
 
-class CNAMERecord(Parent):
+class CNAMERecord(Base):
     target: HostName
 
-class NSRecord(Parent):
+class NSRecord(Base):
     name_server: HostName
 
-class TXTRecord(Parent):
+class TXTRecord(Base):
     text: Annotated[list[Annotated[str, Field(max_length=255)]], Field(min_length=1)]
 
     @model_validator(mode="after")
@@ -63,10 +65,10 @@ class TXTRecord(Parent):
         return self
 
 
-class PTRRecord(Parent):
+class PTRRecord(Base):
     host: HostName
 
-class SOARecord(Parent):
+class SOARecord(Base):
     mname: HostName
     rname: HostName
     serial: Annotated[int, Field(ge=0)]
